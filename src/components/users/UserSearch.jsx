@@ -13,11 +13,7 @@ function UserSearch() {
     const handleClear = (e) => clearUsers()
     const handleSubmit = (e) => {
         if (text === ''){
-<<<<<<< HEAD
-            alert(e)
-=======
             setAlert('Please enter a value', 'error')
->>>>>>> dev
         }else{
             searchUsers(text)
         }
