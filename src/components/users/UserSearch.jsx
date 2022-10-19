@@ -11,10 +11,8 @@ function UserSearch() {
     const handleClear = (e) => clearUsers()
     const handleSubmit = (e) => {
         if (text === ''){
-            console.log(e.target.value)
             alert(e)
         }else{
-            console.log(e.target.value)
             searchUsers(text)
         }
 
