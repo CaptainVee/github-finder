@@ -7,11 +7,12 @@ const GithubContext = createContext()
 const GITHUB_URL = process.env.REACT_APP_GITHUB_URL
 // const GITHUB_TOKEN = process.env.REACT_APP_GITHUB_TOKEN
 
-export const GithubProvider = ({children}) => {
+export const GithubProvider = ({ children }) => {
 
     const initialState = {
         users: [],
         userProfile: {}, // you use a curly brace here because its a single user we are fetching
+        repos: [],
         loading: false,
     }
 
@@ -29,11 +30,11 @@ export const GithubProvider = ({children}) => {
         //     Authorization: `token ${GITHUB_TOKEN}`
         // }}
         )
-        const {data} = await response.json()
+        const {items} = await response.json()
 
         dispatch({
             type: 'GET_USERS',
-            payload: data
+            payload: items
         })
     }
 
@@ -41,7 +42,7 @@ export const GithubProvider = ({children}) => {
     const getUserProfile = async (login) => {
         setLoading()
 
-        const response = await fetch(`${GITHUB_URL}/user/${login}`
+        const response = await fetch(`${GITHUB_URL}/users/${login}`
         // {headers: {
         //     Authorization: `token ${GITHUB_TOKEN}`
         // }}
@@ -49,14 +50,36 @@ export const GithubProvider = ({children}) => {
         if (response.status === 404){
             window.location = '/notfound'
         }else{
-            const {item} = await response.json()
+            const data = await response.json()
     
             dispatch({
                 type: 'GET_USER_PROFILE',
-                payload: item
+                payload: data
             })
         }
     }
+
+    // Get user repos
+    const getRepos = async (login) => {
+        const params = new URLSearchParams({
+            sort: 'created',
+            per_page: 10
+        })
+        setLoading()
+
+        const response = await fetch(`${GITHUB_URL}/users/${login}/repos?=${params}`
+        // {headers: {
+        //     Authorization: `token ${GITHUB_TOKEN}`
+        // }}
+        )
+        const data = await response.json()
+
+        dispatch({
+            type: 'GET_REPOS',
+            payload: data
+        })
+    }
+
 
     // Set loading
     const setLoading = () => dispatch({
@@ -71,9 +94,11 @@ export const GithubProvider = ({children}) => {
     return <GithubContext.Provider value={{
         users: state.users,
         userProfile: state.userProfile,
+        repos: state.repos,
         loading: state.loading,
         searchUsers,
         getUserProfile,
+        getRepos,
         clearUsers
     }}>
         { children }
