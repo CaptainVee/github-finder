@@ -17,12 +17,12 @@ function UserProfile() {
 
     useEffect(() => {
       dispatch({type: 'SET_LOADING'})
-      const getUserData = async () =>{
+      const getUserProfileData = async () =>{
         const userProfileData = await getUserProfileAndRepos(params.login)
         dispatch({type: 'GET_USER_PROFILE_AND_REPOS', payload: userProfileData})
 
       }
-      getUserData()
+      getUserProfileData()
     }, [dispatch, params.login])
 
     if (loading) {
@@ -43,7 +43,7 @@ function UserProfile() {
                 </figure>
                 <div className="card-body justify-end">
                   <h2 className="card-title mb-0">{name}</h2>
-                  <p>{login}</p>
+                  <>{login}</>
                 </div>
               </div>
             </div>

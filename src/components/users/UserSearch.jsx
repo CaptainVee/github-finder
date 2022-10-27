@@ -12,6 +12,7 @@ function UserSearch() {
 
     const handleChange = (e) => setText(e.target.value)
     const handleSubmit = async (e) => {
+        e.preventDefault()
         if (text === ''){
             setAlert('Please enter a value', 'error')
         }else{
@@ -20,7 +21,7 @@ function UserSearch() {
             dispatch({type: 'GET_USERS', payload: users})
         }
 
-        e.preventDefault()
+        
     }
 
   return (
