@@ -5,20 +5,25 @@ import { FaStore, FaCode, FaUserFriends, FaUsers } from 'react-icons/fa'
 import Spinner from '../components/layout/Spinner'
 import RepoList from '../components/repos/RepoList'
 import GithubContext from '../context/github/GithubContext'
+import { getUserProfileAndRepos } from '../context/github/GithubActions'
 
 
 
 function UserProfile() {
     const params = useParams()
-    const {getUserProfile, userProfile, getRepos, repos, loading } = useContext(GithubContext)
-    console.log(userProfile)
+    const {userProfile, repos, loading, dispatch } = useContext(GithubContext)
     const {name, type, avatar_url, location, bio, blog, twitter_username, login, 
             html_url, followers, following, public_repo, public_gist, hireable} = userProfile
 
     useEffect(() => {
-        getUserProfile(params.login)
-        getRepos(params.login)
-    }, [])
+      dispatch({type: 'SET_LOADING'})
+      const getUserData = async () =>{
+        const userProfileData = await getUserProfileAndRepos(params.login)
+        dispatch({type: 'GET_USER_PROFILE_AND_REPOS', payload: userProfileData})
+
+      }
+      getUserData()
+    }, [dispatch, params.login])
 
     if (loading) {
       return <Spinner />      
